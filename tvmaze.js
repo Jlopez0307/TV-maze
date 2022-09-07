@@ -69,10 +69,6 @@ function populateShows(shows) {
 
     $showsList.append($item);
   }
-  const $img = $('img');
-  $img.error(function(){
-    $(this).attr('src','https://tinyurl.com/tv-missing');
-  })
 }
 
 
@@ -123,19 +119,22 @@ async function getEpisodes(id) {
 }
 
 function populateEpisodes(episodes){
-  const $episodesList = $('#episodes-list');
+  const $episodesArea = $('#episodes-area');
 
   for(let episode of episodes){
     let $listItem = $(`
-      <li>${episode.name}(${episode.season}, Episode number: ${episode.number})</li>
+      <li>Episode Title: ${episode.name} (Season: ${episode.season}, Episode number: ${episode.number})</li>
     `)
-    $episodesList.append($listItem);
+    $episodesArea.append($listItem);
   }
-  $episodesList.show()
+  $episodesArea.show()
 }
 
-$('#shows-list').on('click', '#show-episodes', function(e){
+$('#shows-list').on('click', '#show-episodes', async function handleClick(e){
   console.log(e.target)
-  const $showButton = $('#show-episodes');
-  console.log($showButton.parent())
+  let $showId = $(e.target).closest('.Show').data('show-id');
+  let episodes = await getEpisodes($showId);
+  console.log($showId)
+
+  populateEpisodes(episodes);
 })
